@@ -1,0 +1,156 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Outfit;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+
+  --title-color: #727676;
+  --content-color: #444746;
+  --input-color: #1f1f1f;
+  --bg-color: #f0f4f9;
+  --bg-code-color: #92e5ff;
+  --gap: 2rem;
+
+  --secondary-color: #7931f5;
+  --input-focus-border-color: #8749f2;
+  --label-bg: #fff;
+  --border-color: #ddd;
+  --input-focus-bg-color: #eee;
+}
+
+/* login page css*/
+.login-page,
+.signup-page {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box,
+.signup-box {
+  width: 100%;
+  max-width: 450px;
+  border: 1px solid var(--border-color);
+  padding: 1.2rem;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.input-box {
+  position: relative;
+  margin: 8px 0;
+}
+.input-box input {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 1.1rem;
+}
+
+.input-box label {
+  position: absolute;
+  color: gray;
+  left: 12px;
+  top: 12px;
+  transition: all 0.2s ease;
+}
+.middle-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.middle-text .check {
+  display: flex;
+  gap: 6px;
+}
+.middle-text .check:hover {
+  cursor: pointer;
+}
+.middle-text .forgot {
+  color: var(--secondary-color);
+}
+.middle-text .forgot:hover {
+  cursor: pointer;
+}
+.sign-in-btn,
+.sign-up-btn {
+  border: none;
+  background-color: var(--secondary-color);
+  padding: 0.5rem 0;
+  text-align: center;
+  border-radius: 8px;
+  color: var(--label-bg);
+  font-size: 18px;
+  margin: 12px 0;
+}
+.sign-in-btn:hover {
+  cursor: pointer;
+}
+.or-box {
+  position: relative;
+  margin: 12px 0;
+}
+.or-box .or-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--label-bg);
+  padding: 0 6px;
+}
+.google-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px;
+  padding-left: 1rem;
+  gap: 1rem;
+}
+.google-box .google-icon {
+  width: 24px;
+}
+.google-box:hover {
+  cursor: pointer;
+}
+
+.bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+.bottom span {
+  margin-left: 4px;
+  color: var(--secondary-color);
+}
+.bottom span:hover {
+  cursor: pointer;
+}
+.input-box input:focus + label,
+.input-box input:not(:placeholder-shown):valid + label {
+  top: -10px;
+  color: var(--secondary-color);
+  background-color: var(--label-bg);
+  padding: 0 6px;
+}

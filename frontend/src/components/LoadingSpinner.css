@@ -1,0 +1,41 @@
+/* src/components/LoadingSpinner.css */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  position: relative; /*  for positioning the pseudo-element */
+}
+
+.gemini-icon {
+  width: 20px; /* Adjust size as needed */
+  height: 20px; /* Adjust size as needed */
+  /* The icon itself remains still, no rotation animation */
+  position: relative;
+  z-index: 1;
+}
+
+/* The rotating colored ring */
+.loading-container::before {
+  content: "";
+  position: absolute;
+  width: 30px; /* Size of the ring (larger than icon) */
+  height: 30px; /* Size of the ring (larger than icon) */
+  border: 2px solid transparent; /* Base transparent border */
+  border-top-color: #639dfa; /* Blue */
+  border-right-color: #ec6e62; /* Red */
+  border-bottom-color: #e5be4b; /* Yellow */
+  border-radius: 50%; /* Makes it a circle */
+  animation: spin 0.8s ease-out infinite; /* Apply spin animation only here */
+}
+
+/* Keyframes for continuous rotation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

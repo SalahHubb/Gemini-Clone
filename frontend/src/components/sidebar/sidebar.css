@@ -1,0 +1,167 @@
+.sidebar {
+  padding: 1.5rem;
+  background-color: var(--bg-color);
+  color: var(--content-color);
+  font-size: 15px;
+  height: 100vh;
+  width: 65px;
+
+  display: grid;
+  grid-template-rows: repeat(2, auto) 1fr auto;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.expanded {
+  width: 300px;
+}
+
+.sidebar div {
+  cursor: pointer;
+}
+
+.icon {
+  width: 20px;
+  height: 24px;
+}
+
+.menu {
+  margin-bottom: var(--gap);
+}
+
+.between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Animate text visibility */
+.item div {
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
+
+.expanded .item div {
+  opacity: 1;
+  transition-delay: 0.2s;
+}
+
+.title {
+  margin-bottom: 10px;
+  color: var(--title-color);
+  font-weight: 600;
+
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
+
+.expanded .title {
+  opacity: 1;
+  transition-delay: 0.2s;
+}
+
+.explore {
+  padding: var(--gap) 0px;
+}
+
+.explore-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.new-chat {
+  color: lightgray;
+}
+
+.code {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background-color: var(--bg-code-color);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.code .icon {
+  width: 17px;
+  height: 21px;
+}
+
+.list {
+  overflow-y: auto;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+}
+
+.recent-list div {
+  padding: 8px 0px;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expanded .recent-list div {
+  opacity: 1;
+  transition-delay: 0.2s;
+}
+
+.recent-list div:hover {
+  background-color: #3d68ae;
+}
+
+.recent-list div.current {
+  background-color: #e9eef6;
+}
+
+.bottom {
+  padding-top: 18px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  #root {
+    position: relative;
+  }
+
+  .main {
+    width: 100%;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    width: 300px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+    background-color: var(--bg-color);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar.expanded {
+    transform: translateX(0);
+  }
+}
