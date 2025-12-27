@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
+import 'highlight.js/styles/github-dark.css'; 
 import "./main.css";
 import Input from "./Input";
 import { IoIosArrowDown } from "react-icons/io";
 import { assets } from "../../assets/assets";
 import { apiContext } from "../../context/ApiContext";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // For GitHub Flavored Markdown
-import rehypeHighlight from "rehype-highlight"; // For syntax highlighting
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import LoadingSpinner from "../LoadingSpinner";
 
 const ChatView = () => {
@@ -64,7 +65,13 @@ const ChatView = () => {
                     </div>
                   </div>
                   <div className="text markdown-body">
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                    {/* use markdown processor */}
+
+                    <ReactMarkdown
+                      children={message.content}
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeHighlight]}
+                    />
                   </div>
                 </div>
               );
