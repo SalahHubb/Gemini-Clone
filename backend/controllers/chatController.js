@@ -22,6 +22,7 @@ const getMessageList = async (req, res) => {
 const postMessage = async (req, res) => {
   try {
     const { conversationId, role, content } = req.body;
+    
     if (!conversationId || !role || !content) {
       return res
         .status(400)
