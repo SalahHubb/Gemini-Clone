@@ -37,6 +37,10 @@ app.get("/", (req, res) => {
 app.use(globalErrorHandler);
 
 // start the server
-app.listen(PORT, () => {
-  console.log("server is running on port " + PORT);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log("server is running on port " + PORT);
+  });
+}
+
+export default app;
