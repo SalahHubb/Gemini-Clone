@@ -1,6 +1,27 @@
 import User from "../models/userSchema.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { passport } from "../config/passport.js";
+import "dotenv/config";
+
+// ------------ //
+
+// utilities
+const createToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "1d" });
+};
+
+const buildCookieOptions = () => {
+  const isProd = process.env.NODE_ENV === "production";
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+    maxAge: 24 * 60 * 60 * 1000,
+  };
+};
+
+// --------------- //
 
 const registerUser = async (req, res) => {
   try {
@@ -23,63 +44,61 @@ const registerUser = async (req, res) => {
 
     user = await newUser.save();
 
+    // create jwt and send to browser cookie
+    const token = createToken(user._id);
+
+    res.cookie("token", token, buildCookieOptions());
+
+    // registration successful
     return res.json({
       success: true,
       message: "user registered successfully",
-      user,
+      user: { _id: user._id, username: user.username, email: user.email },
     });
   } catch (error) {
     return res.json({ success: false, message: error.message });
   }
 };
 
-const loginUser = (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) return next(err);
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
+    // check if user exists
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.json({
-        success: false,
-        message: info.message || "Invalid credentials.",
-      });
+      return res.json({ success: false, message: "User not found" });
     }
 
-    req.login(user, (err) => {
-      if (err) return next(err);
+    // check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.json({ success: false, message: "Incorrect password" });
+    }
 
-      // return res.json({
-      //   success: true,
-      //   message: "Login successful.",
-      //   user: {
-      //     id: user._id,
-      //     username: user.username,
-      //     email: user.email,
-      //   },
-      // });
-      // ensure session is persisted before sending response
-      req.session.save((saveErr) => {
-        if (saveErr) return next(saveErr);
+    // create jwt and send to browser cookie
+    const token = createToken(user._id);
 
-        return res.json({
-          success: true,
-          message: "Login successful.",
-          user: {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-          },
-        });
-      });
+    res.cookie("token", token, buildCookieOptions());
+
+    // login successful
+    return res.json({
+      success: true,
+      message: "Login successful",
+      user: { _id: user._id, username: user.username, email: user.email },
     });
-  })(req, res, next);
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.json({ success: false, message: "Server error" });
+  }
 };
 
 const logoutUser = (req, res) => {
-  req.logout((err) => {
-    if (err)
-      return res.json({ success: false, message: "Logout failed. Try again" });
-    res.json({ success: true, message: "Logged out successfully." });
+  res.clearCookie("token", {
+    ...buildCookieOptions(),
   });
+
+  return res.json({ success: true, message: "Logout successful" });
 };
 
 export { registerUser, loginUser, logoutUser };
