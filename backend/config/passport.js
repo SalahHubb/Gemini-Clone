@@ -3,38 +3,8 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import "dotenv/config";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import User from "../models/userSchema.js";
-
-passport.use(
-  new LocalStrategy(
-    { usernameField: "email" },
-    async (email, password, done) => {
-      try {
-        // Find user by email
-        const user = await User.findOne({ email });
-
-        // user not found
-        if (!user) {
-          return done(null, false, {
-            message: "user not found. please register.",
-          });
-        }
-
-        // check password
-        const match = await bcrypt.compare(password, user.password);
-        if (!match) {
-          return done(null, false, { message: "Incorrect password" });
-        }
-
-        // success
-        return done(null, user);
-      } catch (error) {
-        console.log("Local authentication error: ", error.message);
-        return done(error);
-      }
-    }
-  )
-);
 
 passport.use(
   new GoogleStrategy(
@@ -62,8 +32,16 @@ passport.use(
           user = await newUser.save();
         }
 
-        // Return the user (existing or newly created)
-        done(null, user);
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "1d",
+        });
+
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 24 * 60 * 60 * 1000,
+        });
       } catch (error) {
         console.log("google authentication error: ", error);
         return done(error);
@@ -71,14 +49,5 @@ passport.use(
     }
   )
 );
-
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  const user = await User.findById(id);
-  done(null, user); // attach on req.user
-});
 
 export { passport };
