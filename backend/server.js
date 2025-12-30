@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 import "dotenv/config";
 import connectToDB from "./config/mongodb.js";
 import userRouter from "./routes/userRoute.js";
-import session from "express-session";
 import { passport } from "./config/passport.js";
 import chatRouter from "./routes/chatRoute.js";
 import globalErrorHandler from "./middlewares/globalErrorHandler.js";
@@ -23,23 +22,9 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 1000 * 60 * 60 * 24,
-    },
-  })
-);
 
 // Initialize Passport and session
 app.use(passport.initialize());
-app.use(passport.session());
 
 // api end points
 app.use("/api/user", userRouter);
